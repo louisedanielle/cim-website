@@ -1,0 +1,75 @@
+{% extends "/html/base.html" %}
+{%block subtitle %}: {{page.title}}{% endblock %}
+{% block meta %}
+{% if page.description %}
+<meta name="description" content="{{page.description}}">
+{% comment %} OpenGraph tags {% endcomment %}
+<meta property="og:description" content="{{page.description}}" />
+{% endif %}
+{% if page.image %}
+{% if page.image.path %}
+<meta property="og:image" content="{{site-url}}{{blog-prefix}}{{page.image.path}}" />
+{% if page.image.type %}
+<meta property="og:image:type" content="{{page.image.type}}" />{% endif %}
+{% if page.image.width %}
+<meta property="og:image:width" content="{{page.image.width}}" />{% endif %}
+{% if page.image.height %}
+<meta property="og:image:height" content="{{page.image.height}}" />{% endif %}
+{% if page.image.alt %}
+<meta property="og:image:alt" content="{{page.image.alt}}" />{% endif %}
+{% else %}
+<meta property="og:image" content="{{site-url}}{{blog-prefix}}{{page.image}}" />{% endif %}
+{% endif %}
+<meta property="og:url" content="{{site-url}}{{uri}}" />
+<meta property="og:title" content="{{page.title}}" />
+<meta property="og:type" content="article" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content="{{site-url}}{{uri}}" />
+<meta name="twitter:title" content="{{page.title}}" />
+<meta name="twitter:description" content="{{page.description}}" />
+{% if page.image %}
+<meta name="twitter:image"
+    content="{{site-url}}{{blog-prefix}}{% if page.image.path %}{{page.image.path}}{% else %}{{page.image}}{% endif %}" />
+{% endif %}
+<meta name="twitter:creator" content="{{twitter-acct}}" />
+{% endblock %}
+{% block content %}
+<div id="custom-page">
+    {% if not page.notitle %}
+    <div id="page-header">
+        <h1>{{page.title}}</h1>
+        <p>
+            {% if page.date %}
+            Made at {{page.date|parseDate|date:"yyyy/MM/dd"}}
+            {% endif %}
+            {% if all page.date page.last-edited-by %}
+            <br>
+            {% endif %}
+            {% if page.last-edited-by %}
+            Last edited by: {{page.last-edited-by}}
+            {% endif %}
+        </p>
+    </div>
+    {% endif %}
+    {% if page.toc %}
+    <h3>Table of Contents</h3>
+    {{page.toc|safe}}
+    {% endif %}
+    {{page.content|safe}}
+
+    {% if page.link %}
+    <div id="prev-next">
+        {% if page.prev %}
+        {% if page.prev.link %}
+        <a class="button" href="{{page.prev.uri}}">&laquo; {{page.prev.title}}</a>
+        {% endif %}
+        {% endif %}
+        {% if all page.next %}
+        {% if page.next.llink %}
+        <a class="right button" href="{{page.next.uri}}">{{page.next.title}} &raquo;</a>
+        {% endif %}
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
